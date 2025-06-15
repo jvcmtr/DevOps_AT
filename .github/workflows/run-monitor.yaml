@@ -1,0 +1,26 @@
+name: Run Monitor
+
+on:
+  push:
+
+
+jobs:
+  App_Environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output variable
+        run: 'echo "App environment : ${{vars.APP_ENV}}"'
+
+  Suport_Email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output variable
+        run: 'echo "App environment : ${{vars.SUPORT_EMAIL}}"'
+
+  API_Key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output variable
+        env: 
+          KEY: ${{secrets.API_KEY}}
+        run: 'echo "API Key : ${{env.KEY}} (Masked)"'
