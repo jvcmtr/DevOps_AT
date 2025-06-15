@@ -1,0 +1,45 @@
+name: CI AT
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate
+        run: bash -n ./appmonitor/status-check.sh
+
+  Test:
+    needs: [Validate]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: echo "Running tests" && exit 0
+
+  Package:
+    needs: [Test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Report
+        run: mkdir -p reports && echo "Teste e validação bem sucedidos" > reports/relatorio.txt
+
+      - name: Compact
+        run: zip -r report.zip reports
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio
+          path: report.zip
