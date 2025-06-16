@@ -82,7 +82,7 @@ jobs:
         run: cat report/diagnostic_overview.md > $GITHUB_STEP_SUMMARY
       
       - name: Compact
-        run: zip -r report.zip reports
+        run: zip -r report.zip report
 
       - name: Upload
         uses: actions/upload-artifact@v4
