@@ -1,0 +1,91 @@
+name: Diagnostics Report
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  Validate_APP_ENV:
+    env: 
+      IS_VALID : ${{vars.APP_ENV}} == ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Valid
+        if: ${{env.IS_VALID}}
+        run: 'echo "✅ APP_ENV : ${{vars.APP_ENV}}" && exit 0' 
+
+      - name: Not Valid
+        if: ${{!env.IS_VALID}}
+        run: echo "❌ Unable to read APP_ENV " && exit 1
+
+
+  Validate_API_KEY:
+    env: 
+      IS_VALID : ${{secrets.API_KEY}} == ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Valid
+        if: ${{env.IS_VALID}}
+        run: 'echo "✅ APP_ENV : ${{vars.API_KEY}}" && exit 0' 
+
+      - name: Not Valid
+        if: ${{!env.IS_VALID}}
+        run: echo "❌ Unable to read API_KEY " && exit 1
+
+
+  Validate_Script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate
+        run: bash -n ./appmonitor/status-check.sh || exit 1
+
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Test
+        run: echo "Running tests" || exit 1
+
+  Generate_Report:
+    needs: [Validate_APP_ENV, Validate_API_KEY, Validate_Script, Test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Dir
+        run: mkdir -p report
+
+      - name: Populate File
+        run: |
+          echo "# DIAGNOSTIC OVERVIEW" >> report/diagnostic_overview.md
+          echo "### Information" >> report/diagnostic_overview.md
+          echo "- Branch : \`${{ github.ref_name }}\`" >> report/diagnostic_overview.md
+          echo "- Event : \`${{ github.event_name }}\`" >> report/diagnostic_overview.md
+          echo "- Triggered by : \`${{ github.actor }}\`" >> report/diagnostic_overview.md
+          echo "- Commit : \`${{ github.sha }}\`" >> report/diagnostic_overview.md
+          echo " " >> report/diagnostic_overview.md
+          echo "More details at : https://github.com/jvcmtr/DevOps_AT/actions/runs/${{ github.run_id }}" >> report/diagnostic_overview.md
+          
+
+          echo "### Results" >> report/diagnostic_overview.md
+          echo "${{ needs.Validate_Script.result == 'success' && '✅ Valid Script' || '==❌ invalid Script=='  }}" >> report/diagnostic_overview.md
+          echo ${{ needs.Validate_APP_ENV.result == 'success' && '✅ Valid APP_ENV' || '==❌ invalid APP_ENV=='  }} >> report/diagnostic_overview.md
+          echo ${{ needs.Validate_API_KEY.result == 'success' && '✅ Valid API_KEY' || '==❌ invalid API_KEY=='  }} >> report/diagnostic_overview.md
+
+      - name: Add to Sumary
+        run: cat report/diagnostic_overview.md > $GITHUB_STEP_SUMMARY
+      
+      - name: Compact
+        run: zip -r report.zip report
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostics_overview.md
+          path: report.zip
