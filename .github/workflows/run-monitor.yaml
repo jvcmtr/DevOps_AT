@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Output variable
-        run: 'echo "App environment : ${{vars.SUPORT_EMAIL}}"'
+        run: 'echo "Suport email : ${{vars.SUPPORT_EMAIL}}"'
 
   API_Key:
     runs-on: ubuntu-latest
