@@ -79,7 +79,7 @@ jobs:
           echo ${{ needs.Validate_API_KEY.result == 'success' && '✅ Valid API_KEY' || '==❌ invalid API_KEY=='  }} >> report/diagnostic_overview.md
 
       - name: Add to Sumary
-        run: report/diagnostic_overview.md > $GITHUB_STEP_SUMMARY
+        run: cat report/diagnostic_overview.md > $GITHUB_STEP_SUMMARY
       
       - name: Compact
         run: zip -r report.zip reports
