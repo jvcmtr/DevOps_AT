@@ -47,7 +47,7 @@ jobs:
           name: relatorio
           path: report.zip
     
-  summary:
+  Summary:
     runs-on: ubuntu-latest
     needs: [Validate, Test, Package]
     if: always()

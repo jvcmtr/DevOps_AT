@@ -1,0 +1,23 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Startup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: startup
+        run: echo "... Awaiting for manual validation ..."
+
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: [Startup]
+    environment:
+      name: PROD
+
+    steps:
+      - name: Checkout
+        run : echo "Deploying to ${{vars.PROD_DOMAIN}}..."
