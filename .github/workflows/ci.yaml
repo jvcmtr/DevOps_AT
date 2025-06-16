@@ -61,4 +61,4 @@ jobs:
           echo "- Validate: ${{ needs.Validate.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- Test: ${{ needs.Test.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- Package: ${{ needs.Package.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Artifact: https://github.com/jvcmtr/DevOps_AT/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- Artifact: https://github.com/jvcmtr/DevOps_AT/actions/runs/${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY

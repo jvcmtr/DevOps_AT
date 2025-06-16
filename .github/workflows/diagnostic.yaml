@@ -70,7 +70,7 @@ jobs:
           echo "- Triggered by : \`${{ github.actor }}\`" >> report/diagnostic_overview.md
           echo "- Commit : \`${{ github.sha }}\`" >> report/diagnostic_overview.md
           echo " " >> report/diagnostic_overview.md
-          echo "More details at : https://github.com/jvcmtr/DevOps_AT/actions/runs/${{ github.run_id }})" >> report/diagnostic_overview.md
+          echo "More details at : https://github.com/jvcmtr/DevOps_AT/actions/runs/${{ github.run_id }}" >> report/diagnostic_overview.md
           
 
           echo "### Results" >> report/diagnostic_overview.md
