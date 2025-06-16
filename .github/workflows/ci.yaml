@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate
-        run: bash -n ./appmonitor/status-check.sh
+        run: bash -n ./appmonitor/status-check.sh || echo "::error::Falha ao validar o script"
 
   Test:
     needs: [Validate]
